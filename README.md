@@ -10,3 +10,5 @@
 ```bash
 npm ci
 npm run dev
+
+**Ссылка на приложение:** https://loliirl.github.io/todo-list-vue/

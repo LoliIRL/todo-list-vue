@@ -1,19 +1,24 @@
 import { defineStore } from 'pinia'
 import { useUserStore } from './user'
+import type { Task } from '../types/todo'
+
+interface TodoState {
+  tasks: Task[]
+}
 
 export const useTodoStore = defineStore('todo', {
-  state: () => ({
-    tasks: [] // { id, title, done, userId }
+  state: (): TodoState => ({
+    tasks: []
   }),
   getters: {
-    userTasks: (state) => {
+    userTasks(state): Task[] {
       const userStore = useUserStore()
       if (!userStore.currentUser) return []
-      return state.tasks.filter(t => t.userId === userStore.currentUser.id)
+      return state.tasks.filter((t) => t.userId === userStore.currentUser!.id)
     }
   },
   actions: {
-    addTask(title) {
+    addTask(title: string): void {
       const userStore = useUserStore()
       if (!userStore.currentUser) return
       this.tasks.push({
@@ -23,16 +28,16 @@ export const useTodoStore = defineStore('todo', {
         userId: userStore.currentUser.id
       })
     },
-    toggleTask(id) {
-      const task = this.tasks.find(t => t.id === id)
+    toggleTask(id: number): void {
+      const task = this.tasks.find((t) => t.id === id)
       if (task) task.done = !task.done
     },
-    updateTask(id, title) {
-      const task = this.tasks.find(t => t.id === id)
+    updateTask(id: number, title: string): void {
+      const task = this.tasks.find((t) => t.id === id)
       if (task) task.title = title
     },
-    deleteTask(id) {
-      this.tasks = this.tasks.filter(t => t.id !== id)
+    deleteTask(id: number): void {
+      this.tasks = this.tasks.filter((t) => t.id !== id)
     }
   },
   persist: true
